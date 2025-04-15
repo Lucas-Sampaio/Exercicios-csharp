@@ -17,7 +17,8 @@ namespace Questao5.Application.Validators
                 .WithMessage("O {PropertyName} não pode ser vazio.");
 
             RuleFor(x => x.MovimentoDto)
-                .NotNull();
+                .NotNull()
+                .WithMessage("Informe um movimento valido");
 
             When(x => x.MovimentoDto is not null,() =>
             {

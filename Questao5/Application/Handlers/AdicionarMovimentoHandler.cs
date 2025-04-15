@@ -9,6 +9,7 @@ using Questao5.Domain.Enumerators;
 using Questao5.Domain.Errors;
 using Questao5.Domain.Interfaces;
 using Questao5.Domain.Repositories;
+using Questao5.Infrastructure.Database.UnityOfWork;
 
 namespace Questao5.Application.Handlers
 {
@@ -16,7 +17,8 @@ namespace Questao5.Application.Handlers
         IValidator<AdicionarMovimentoRequest> validator,
         IContaRepository contaRepository,
         IIdempontenciaRepository idempontenciaRepository,
-        IMovimentoRepository movimentoRepository) : IRequestHandler<AdicionarMovimentoRequest, AdicionarMovimentoResponse>
+        IMovimentoRepository movimentoRepository,
+        IUnityOfWork uow) : IRequestHandler<AdicionarMovimentoRequest, AdicionarMovimentoResponse>
     {
         public async Task<AdicionarMovimentoResponse> Handle(AdicionarMovimentoRequest request, CancellationToken cancellationToken)
         {
@@ -43,13 +45,25 @@ namespace Questao5.Application.Handlers
             var movimentoDto = request.MovimentoDto;
 
             var movimento = new Movimento(request.IdContaCorrente, movimentoDto.Valor, (ETipoMovimento)movimentoDto.TipoMovimento);
-            response.Id = await movimentoRepository.Inserir(movimento);
 
-            var requestString = JsonSerializer.Serialize(request);
-            var responseString = JsonSerializer.Serialize(response);
-            var idempontecia = new Idempotencia(request.IdRequest, requestString, responseString);
+            using var transaction = await uow.BeginTransactionAsync(cancellationToken);
+            try
+            {
+                response.Id = await movimentoRepository.Inserir(movimento);
 
-            await idempontenciaRepository.Inserir(idempontecia);
+                var requestString = JsonSerializer.Serialize(request);
+                var responseString = JsonSerializer.Serialize(response);
+                var idempontecia = new Idempotencia(request.IdRequest, requestString, responseString);
+
+                await idempontenciaRepository.Inserir(idempontecia);
+                transaction.Commit();
+            }
+            catch (Exception ex)
+            {
+                transaction.RollBack();
+                throw;
+            }
+
             return response;
         }
 

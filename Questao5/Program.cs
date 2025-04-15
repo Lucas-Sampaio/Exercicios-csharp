@@ -13,6 +13,7 @@ using Questao5.Domain.Interfaces;
 using Questao5.Domain.Repositories;
 using Questao5.Infrastructure.Database.CommandStore;
 using Questao5.Infrastructure.Database.QueryStore;
+using Questao5.Infrastructure.Database.UnityOfWork;
 using Questao5.Infrastructure.Sqlite;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,6 +30,7 @@ builder.Services.AddSingleton(new DatabaseConfig { Name = stringConnection });
 builder.Services.AddSingleton<IDatabaseBootstrap, DatabaseBootstrap>();
 //builder.Services.AddScoped(_ => new SqliteConnection(stringConnection));
 builder.Services.AddScoped<IDbConnection>(_ => new SqliteConnection(stringConnection));
+builder.Services.AddScoped<IUnityOfWork>(x => new DapperUnityOfWork(x.GetRequiredService<IDbConnection>()));
 
 //commands
 builder.Services.AddScoped<IRequestHandler<AdicionarMovimentoRequest, AdicionarMovimentoResponse>, AdicionarMovimentoHandler>();

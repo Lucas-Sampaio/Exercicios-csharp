@@ -8,6 +8,5 @@ namespace Questao5.Domain.Entities
         public DateTime DataMovimento { get; } = DateTime.Today;
         public ETipoMovimento TipoMovimento { get; } = tipoMovimento;
         public decimal Valor { get; } = valor;
-        public string DataFormatada => DataMovimento.ToString("dd/MM/yyyy");
     }
 }

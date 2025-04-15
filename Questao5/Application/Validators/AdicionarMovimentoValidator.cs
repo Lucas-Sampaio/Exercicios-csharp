@@ -29,7 +29,7 @@ namespace Questao5.Application.Validators
                 RuleFor(x => x.MovimentoDto.TipoMovimento)
                     .Must(x => x.Equals('C') || x.Equals('D'))
                     .WithErrorCode(nameof(ErrorMessages.INVALID_TYPE))
-                    .WithMessage(nameof(ErrorMessages.INVALID_TYPE));
+                    .WithMessage(ErrorMessages.INVALID_TYPE);
             });
            
         }

@@ -14,12 +14,13 @@ using Questao5.Domain.Repositories;
 using Questao5.Infrastructure.Database.CommandStore;
 using Questao5.Infrastructure.Database.QueryStore;
 using Questao5.Infrastructure.Database.UnityOfWork;
+using Questao5.Infrastructure.Filters;
 using Questao5.Infrastructure.Sqlite;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers(options => options.Filters.Add(typeof(HttpGlobalExceptionFilter)));
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 builder.Services.AddValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
@@ -28,7 +29,6 @@ builder.Services.AddValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssembli
 var stringConnection = builder.Configuration.GetValue<string>("DatabaseName", "Data Source=database.sqlite");
 builder.Services.AddSingleton(new DatabaseConfig { Name = stringConnection });
 builder.Services.AddSingleton<IDatabaseBootstrap, DatabaseBootstrap>();
-//builder.Services.AddScoped(_ => new SqliteConnection(stringConnection));
 builder.Services.AddScoped<IDbConnection>(_ => new SqliteConnection(stringConnection));
 builder.Services.AddScoped<IUnityOfWork>(x => new DapperUnityOfWork(x.GetRequiredService<IDbConnection>()));
 

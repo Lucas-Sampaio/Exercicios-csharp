@@ -95,14 +95,5 @@ namespace Questao5.Domain {
                 return ResourceManager.GetString("INVALID_VALUE", resourceCulture);
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Já existe uma chave de idempotência para essa requisição.
-        /// </summary>
-        internal static string REQUEST_ALREADY_EXISTS {
-            get {
-                return ResourceManager.GetString("REQUEST_ALREADY_EXISTS", resourceCulture);
-            }
-        }
     }
 }

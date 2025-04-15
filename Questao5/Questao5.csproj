@@ -40,7 +40,6 @@
     <Folder Include="Infrastructure\Database\CommandStore\Responses\" />
     <Folder Include="Infrastructure\Database\QueryStore\Requests\" />
     <Folder Include="Infrastructure\Database\QueryStore\Responses\" />
-    <Folder Include="Infrastructure\Filters\" />
   </ItemGroup>
 
   <ItemGroup>

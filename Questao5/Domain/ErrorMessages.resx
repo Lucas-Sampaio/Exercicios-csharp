@@ -129,7 +129,4 @@
   <data name="INVALID_VALUE" xml:space="preserve">
     <value>Apenas valores positivos podem ser recebidos</value>
   </data>
-  <data name="REQUEST_ALREADY_EXISTS" xml:space="preserve">
-    <value>Já existe uma chave de idempotência para essa requisição</value>
-  </data>
 </root>
